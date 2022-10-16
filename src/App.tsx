@@ -1,15 +1,16 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import logo from './logo.svg'
+import './App.css'
+import Top from './components/pages/Top'
+import { Provider } from 'react-redux'
+import { store } from './app/store';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        
-      </header>
-    </div>
-  );
+    <Provider store={store}>
+      <Top />
+    </Provider>
+  )
 }
 
-export default App;
+export default App

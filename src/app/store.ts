@@ -1,9 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import analysisReducer from '../Stores/analysisSlice';
 
 
 export const store = configureStore({
   reducer: {
-
+    test  : analysisReducer,
   },
 });
 
