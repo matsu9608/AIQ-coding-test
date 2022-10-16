@@ -4,7 +4,7 @@ import analysisReducer from '../Stores/analysisSlice';
 
 export const store = configureStore({
   reducer: {
-    test  : analysisReducer,
+    analysis  : analysisReducer,
   },
 });
 
