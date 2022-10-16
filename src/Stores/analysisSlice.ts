@@ -7,13 +7,18 @@ import axios from 'axios'
 const endPoint = 'https://opendata.resas-portal.go.jp'
 
 // stateの型
+export type prefectures = [
+  {
+    id:string,
+    name:string
+  }
+]
+
+
+
+
 export type initialState = {
-  prefectures?:[
-    {
-      id:string,
-      name:string
-    }
-  ],
+  prefectures?:prefectures
 }
 
 // 初期値
@@ -28,7 +33,7 @@ const initialState: initialState = {
 }
 
 // 都道府県一覧
-export const fetchAsyncPrefectures = createAsyncThunk<any, undefined, {rejectValue: string;}>(
+export const fetchAsyncPrefectures = createAsyncThunk<prefectures, undefined, {rejectValue: string;}>(
   "prefectures/get",
   async (auth,thankAPI) => {
     try {
@@ -64,8 +69,8 @@ export const analysisSlice = createSlice({
     builder.addCase(fetchAsyncPrefectures.fulfilled, (state, action) => {
       console.log(action.payload)
       alert("成功")
-      if(Array.isArray(action.payload["result"]) && action.payload["result"].length > 0){
-        state.prefectures = action.payload.result
+      if(Array.isArray(action.payload)){
+        state.prefectures = action.payload
       }
     })
     
