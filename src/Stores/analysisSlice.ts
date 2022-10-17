@@ -131,13 +131,10 @@ export const analysisSlice = createSlice({
 
     builder.addCase(fetchAsyncDemographics.fulfilled, (state, action) => {
       console.log(action.payload)
-      alert('fgefe')
       const prefecture = action.payload.prefectures
-      alert('fgefeegeeg')
       // state.Demographics['テスト'] = {value:1}
       // state.Demographics['テスト'].year = 1
       if (Array.isArray(action.payload.data)) {
-        alert('te')
         state.Demographics = []
         action.payload.data.map((element) => {
           state.Demographics?.push({
