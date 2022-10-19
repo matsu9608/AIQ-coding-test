@@ -1,0 +1,68 @@
+import { useSelector } from 'react-redux'
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { selectDemographicsState } from '../../Stores/analysisSlice';
+
+const LineGraph:React.FC = (props) => {
+  let series: Highcharts.SeriesOptionsType[] = [];
+
+  // 都道府県別総人口state
+  const demographicsState =  useSelector(selectDemographicsState) 
+
+  // demographicsState.
+  let population:number[] = [];
+  let years:string[]= [];
+
+  demographicsState.forEach(element => {
+
+    element.data.forEach(e => {
+      years.push(e.year.toString());
+      population.push(e.value);
+    })
+    
+    series.push({
+      type: "line",
+      name: element.prefecture,
+      data: population,
+    });
+  })
+
+  const options: Highcharts.Options = {
+    title: {
+      text: "総人口推移",
+    },
+    xAxis: {
+      title: {
+        text: "年度",
+      },
+      categories: years,
+    },
+    yAxis: {
+      title: {
+        text: "人口数",
+      },
+    },
+    // 都道府県を一つも選んでいない場合との分岐条件
+    series:
+      series.length === 0
+        ? [{ type: "line", name: "都道府県名", data: [] }]
+        : series,
+  };
+
+
+// const chartRef = useRef<graphData>(null);
+// const divStyle: React.CSSProperties = {
+//   marginLeft: 'auto',
+//   marginRight: 'auto',
+//   margin: '10px',
+//   width: '500px',
+// }
+
+  return (
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  )
+}
+
+export default LineGraph
