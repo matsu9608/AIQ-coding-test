@@ -8,28 +8,28 @@ const endPoint = 'https://opendata.resas-portal.go.jp'
 
 // state全体
 export type initialState = {
-  prefectures: [
-    {
-      id: string
-      name: string
-      checked: boolean
-    }?,
-  ]
-  Demographics: [
-    {
-      prefecture?: string
-      year?: number
-      value?: number
-    }?,
-  ]
-  checked:[]
+  prefectures: {
+    id: string
+    name: string
+    checked: boolean
+  }[]
+  Demographics: {
+    [prop: string]: any
+    prefecture?: string
+    data: {
+      [prop: string]: any
+      year: number
+      value: number
+    }[]
+  }[]
+  checked: []
 }
 
 // 初期値
 const initialState: initialState = {
   prefectures: [],
   Demographics: [],
-  checked:[]
+  checked: [],
 }
 
 /// APIレスポンス
@@ -49,7 +49,7 @@ export type resDemographics = {
       value: number
     },
   ]
-  prefectures: string
+  prefectures?: string
 }
 
 // 都道府県一覧
@@ -94,7 +94,6 @@ export const fetchAsyncDemographics = createAsyncThunk<
       },
     )
     res.data.result.data[0].prefectures = arg
-    console.log(res.data.result.data[0])
     return res.data.result.data[0]
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -130,21 +129,45 @@ export const analysisSlice = createSlice({
     builder.addCase(fetchAsyncPrefectures.pending, (state, action) => {})
 
     builder.addCase(fetchAsyncDemographics.fulfilled, (state, action) => {
-      console.log(action.payload)
-      const prefecture = action.payload.prefectures
-      // state.Demographics['テスト'] = {value:1}
-      // state.Demographics['テスト'].year = 1
       if (Array.isArray(action.payload.data)) {
-        state.Demographics = []
-        action.payload.data.map((element) => {
-          state.Demographics?.push({
-            prefecture: action.payload.prefectures,
-            year: element.year,
-            value: element.value,
-          })
+        type Demographics = {
+          prefecture?: string
+          data: {
+            year: number
+            value: number
+          }[]
+        }[]
+
+        const demographics: Demographics = state.Demographics
+        alert('geefefef')
+        console.log(action.payload.prefectures)
+
+        // 取得した都道府県情報が既にあるかどうか
+        // あれば削除
+        demographics.forEach((element, i) => {
+          console.log(element.prefecture)
+          if (element.prefecture === action.payload.prefectures) {
+            console.log(element.prefecture)
+            demographics.splice(i, 1)
+          }
         })
+
+        console.log(demographics)
+        alert('geeeeeeeerggrg')
+        demographics.push({
+          prefecture: action.payload.prefectures,
+          data: action.payload.data,
+        })
+        console.log(demographics)
+
+        alert('gehergregreeeeeeerggrg')
+
+        state.Demographics = demographics
+        alert('geeeeeeee')
       }
     })
+
+    alert('終了')
 
     builder.addCase(fetchAsyncDemographics.rejected, (state, action) => {})
 
@@ -153,6 +176,10 @@ export const analysisSlice = createSlice({
 })
 
 export const selectAnalysisState = (state: RootState) => state.analysis
+export const selectPrefecturesState = (state: RootState) =>
+  state.analysis.prefectures
+export const selectDemographicsState = (state: RootState) =>
+  state.analysis.Demographics
 export const {} = analysisSlice.actions
 
 export default analysisSlice.reducer
