@@ -18,21 +18,19 @@ const PrefecturesDemographics: React.FC = (props) => {
   // 取得テスト用
   useEffect(() => {
     dispatch(fetchAsyncPrefectures())
-  }, [])
+  },[dispatch])
 
   // チェックボックスのチェンジイベント
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    switch(e.target.checked){
+    switch (e.target.checked) {
       case true:
         dispatch(setCheckBox(e.target.value))
         dispatch(fetchAsyncDemographics(e.target.value))
-        break;
+        break
       default:
         dispatch(clearCheckBox(e.target.value))
         dispatch(clearCheckedDemographics(e.target.value))
     }
-  
-    console.log(e.target.checked)
   }
 
   return (

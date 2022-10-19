@@ -1,20 +1,15 @@
-import React, { ReactNode, useEffect } from 'react'
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../app/store';
-import { fetchAsyncPrefectures } from '../../Stores/analysisSlice';
+import React, { ReactNode } from 'react'
 
-export type Container = {
-  children: ReactNode;
+export type ContainerProps = {
+  children: ReactNode
 }
 
-const Container: React.FC <Container> = (props) => {
-  
+const Container: React.FC<ContainerProps> = (props) => {
   const { children } = props
-
 
   return (
     <>
-      <header style={{ textAlign: "center" }}>
+      <header style={{ textAlign: 'center' }}>
         <h1>都道府県別人口推移グラフ</h1>
       </header>
       {children}

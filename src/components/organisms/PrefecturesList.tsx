@@ -1,18 +1,14 @@
 import React from 'react'
 import CheckBox from '../atoms/checkBox'
-import Label from '../atoms/Label'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch } from '../../app/store'
+import { useSelector } from 'react-redux'
 import { selectAnalysisState } from '../../Stores/analysisSlice'
-import LineGraph from './LineGraph'
 
 type Props = {
-  onChenge? :React.ChangeEventHandler<HTMLInputElement> 
-} 
+  onChenge?: React.ChangeEventHandler<HTMLInputElement>
+}
 
 const CheckBoxList: React.FC<Props> = (props) => {
-  const {onChenge} = props
-  const dispatch = useDispatch<AppDispatch>()
+  const { onChenge } = props
   const state = useSelector(selectAnalysisState)
 
   return (
@@ -23,7 +19,7 @@ const CheckBoxList: React.FC<Props> = (props) => {
           <>
             <label>
               <CheckBox
-                id = {element?.id}
+                id={element?.id}
                 checked={state.checked.includes(element.name)}
                 onChenge={onChenge}
                 value={element?.name}
