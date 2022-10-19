@@ -6,7 +6,7 @@ import axios from 'axios'
 const endPoint = 'https://opendata.resas-portal.go.jp'
 
 // state全体
-export type initialState = {
+export type InitialState = {
   prefectures: {
     id: string
     name: string
@@ -22,7 +22,7 @@ export type initialState = {
 }
 
 // 初期値
-const initialState: initialState = {
+const initialState: InitialState = {
   prefectures: [],
   Demographics: [],
   checked: [],
@@ -61,6 +61,7 @@ export const fetchAsyncPrefectures = createAsyncThunk<
       },
       method: 'GET',
     })
+
     return res.data['result']
   } catch (e) {
     if (axios.isAxiosError(e) && e.response) {
@@ -102,28 +103,27 @@ export const analysisSlice = createSlice({
   name: 'analysis',
   initialState: initialState,
   reducers: {
-    setCheckBox(state, action:PayloadAction<string>) {
+    setCheckBox(state, action: PayloadAction<string>) {
       state.checked.push(action.payload)
     },
 
-    clearCheckBox(state,action:PayloadAction<string>){
-      const index:number = state.checked.indexOf(action.payload)
-      state.checked.splice(state.checked.indexOf(action.payload))
+    clearCheckBox(state, action: PayloadAction<string>) {
+      state.checked.splice(state.checked.indexOf(action.payload),1)
     },
 
-    clearCheckedDemographics(state,action:PayloadAction<string>){
-      state.Demographics.some((element,i)=> {
-        if(element.prefecture = action.payload){
-          state.Demographics.splice(i,1);
+    clearCheckedDemographics(state, action: PayloadAction<string>) {
+      state.Demographics.forEach((element, i) => {
+        if (element.prefecture === action.payload) {
+          state.Demographics.splice(i, 1)
         }
       })
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAsyncPrefectures.fulfilled, (state, action) => {
       if (Array.isArray(action.payload)) {
         state.prefectures = []
-        action.payload.map((element) => {
+        action.payload.forEach((element) => {
           state.prefectures?.push({
             id: element.prefCode.toString(),
             name: element.prefName,
@@ -181,6 +181,10 @@ export const selectPrefecturesState = (state: RootState) =>
   state.analysis.prefectures
 export const selectDemographicsState = (state: RootState) =>
   state.analysis.Demographics
-export const {setCheckBox,clearCheckBox,clearCheckedDemographics} = analysisSlice.actions
+export const {
+  setCheckBox,
+  clearCheckBox,
+  clearCheckedDemographics,
+} = analysisSlice.actions
 
 export default analysisSlice.reducer
