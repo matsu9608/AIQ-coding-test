@@ -24,7 +24,7 @@ const CheckBoxList: React.FC<Props> = (props) => {
             <label>
               <CheckBox
                 id = {element?.id}
-                checked={element?.checked}
+                checked={state.checked.includes(element.name)}
                 onChenge={onChenge}
                 value={element?.name}
               />

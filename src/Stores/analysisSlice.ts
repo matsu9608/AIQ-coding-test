@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../app/store'
 import axios from 'axios'
-import { CheckJsDirective } from 'typescript'
 
 // API URL PASS
 const endPoint = 'https://opendata.resas-portal.go.jp'
@@ -11,18 +10,15 @@ export type initialState = {
   prefectures: {
     id: string
     name: string
-    checked: boolean
   }[]
   Demographics: {
-    [prop: string]: any
     prefecture?: string
     data: {
-      [prop: string]: any
       year: number
       value: number
     }[]
   }[]
-  checked: []
+  checked: String[]
 }
 
 // 初期値
@@ -106,9 +102,22 @@ export const analysisSlice = createSlice({
   name: 'analysis',
   initialState: initialState,
   reducers: {
-    setCheckBok(state, action) {
-      // state.prefectures.filter(n => n?.id === action.payload)[0]?.checked
+    setCheckBox(state, action:PayloadAction<string>) {
+      state.checked.push(action.payload)
     },
+
+    clearCheckBox(state,action:PayloadAction<string>){
+      const index:number = state.checked.indexOf(action.payload)
+      state.checked.splice(state.checked.indexOf(action.payload))
+    },
+
+    clearCheckedDemographics(state,action:PayloadAction<string>){
+      state.Demographics.some((element,i)=> {
+        if(element.prefecture = action.payload){
+          state.Demographics.splice(i,1);
+        }
+      })
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAsyncPrefectures.fulfilled, (state, action) => {
@@ -118,7 +127,6 @@ export const analysisSlice = createSlice({
           state.prefectures?.push({
             id: element.prefCode.toString(),
             name: element.prefName,
-            checked: false,
           })
         })
       }
@@ -139,7 +147,6 @@ export const analysisSlice = createSlice({
         }[]
 
         const demographics: Demographics = state.Demographics
-        alert('geefefef')
         console.log(action.payload.prefectures)
 
         // 取得した都道府県情報が既にあるかどうか
@@ -153,21 +160,15 @@ export const analysisSlice = createSlice({
         })
 
         console.log(demographics)
-        alert('geeeeeeeerggrg')
         demographics.push({
           prefecture: action.payload.prefectures,
           data: action.payload.data,
         })
         console.log(demographics)
 
-        alert('gehergregreeeeeeerggrg')
-
         state.Demographics = demographics
-        alert('geeeeeeee')
       }
     })
-
-    alert('終了')
 
     builder.addCase(fetchAsyncDemographics.rejected, (state, action) => {})
 
@@ -180,6 +181,6 @@ export const selectPrefecturesState = (state: RootState) =>
   state.analysis.prefectures
 export const selectDemographicsState = (state: RootState) =>
   state.analysis.Demographics
-export const {} = analysisSlice.actions
+export const {setCheckBox,clearCheckBox,clearCheckedDemographics} = analysisSlice.actions
 
 export default analysisSlice.reducer
