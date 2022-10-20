@@ -9,7 +9,6 @@ const Container: React.FC<ContainerProps> = (props) => {
   const conainerStyle = {
     margin:"0 100px"
   }
-
   const { children } = props
 
   return (

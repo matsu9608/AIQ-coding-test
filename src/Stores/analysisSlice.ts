@@ -29,7 +29,7 @@ const initialState: InitialState = {
 }
 
 /// APIレスポンス
-// 都道府県情報レスポンス
+// 都道府県情報レスポンスの型
 export type resPrefectures = [
   {
     prefCode: number
@@ -37,7 +37,7 @@ export type resPrefectures = [
   },
 ]
 
-// 人口構成情報レスポンス
+// 人口構成情報レスポンスの型
 export type resDemographics = {
   data: [
     {
@@ -48,7 +48,7 @@ export type resDemographics = {
   prefectures?: string
 }
 
-// 都道府県一覧
+// 都道府県一覧データ取得
 export const fetchAsyncPrefectures = createAsyncThunk<
   resPrefectures,
   undefined,
@@ -70,7 +70,7 @@ export const fetchAsyncPrefectures = createAsyncThunk<
   }
 })
 
-// 人口構成一覧
+// 人口構成一覧データ取得
 export const fetchAsyncDemographics = createAsyncThunk<
   resDemographics,
   string,
@@ -108,7 +108,7 @@ export const analysisSlice = createSlice({
     },
 
     clearCheckBox(state, action: PayloadAction<string>) {
-      state.checked.splice(state.checked.indexOf(action.payload),1)
+      state.checked.splice(state.checked.indexOf(action.payload), 1)
     },
 
     clearCheckedDemographics(state, action: PayloadAction<string>) {
@@ -147,24 +147,18 @@ export const analysisSlice = createSlice({
         }[]
 
         const demographics: Demographics = state.Demographics
-        console.log(action.payload.prefectures)
 
         // 取得した都道府県情報が既にあるかどうか
         // あれば削除
         demographics.forEach((element, i) => {
-          console.log(element.prefecture)
           if (element.prefecture === action.payload.prefectures) {
-            console.log(element.prefecture)
             demographics.splice(i, 1)
           }
         })
-
-        console.log(demographics)
         demographics.push({
           prefecture: action.payload.prefectures,
           data: action.payload.data,
         })
-        console.log(demographics)
 
         state.Demographics = demographics
       }
@@ -176,15 +170,23 @@ export const analysisSlice = createSlice({
   },
 })
 
+// analysisSliceのstate
 export const selectAnalysisState = (state: RootState) => state.analysis
+
+// analysisSliceの都道府県一覧情報を管理しているstate
 export const selectPrefecturesState = (state: RootState) =>
   state.analysis.prefectures
+
+// analysisSliceの人口構成情報を管理しているstate
 export const selectDemographicsState = (state: RootState) =>
   state.analysis.Demographics
+
+// analysisSliceの各アクション
 export const {
   setCheckBox,
   clearCheckBox,
   clearCheckedDemographics,
 } = analysisSlice.actions
 
+// reducer
 export default analysisSlice.reducer

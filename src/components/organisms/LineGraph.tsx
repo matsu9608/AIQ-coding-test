@@ -9,8 +9,6 @@ const LineGraph: React.FC = (props) => {
   // 都道府県別総人口state
   const demographicsState = useSelector(selectDemographicsState)
 
-  // demographicsState.
-
   let years: string[] = []
 
   demographicsState.forEach((element) => {

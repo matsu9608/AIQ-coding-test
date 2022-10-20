@@ -15,7 +15,7 @@ import Container from '../templates/Container'
 const PrefecturesDemographics: React.FC = (props) => {
   const dispatch = useDispatch<AppDispatch>()
 
-  // 取得テスト用
+  // 初期表示
   useEffect(() => {
     dispatch(fetchAsyncPrefectures())
   },[dispatch])
