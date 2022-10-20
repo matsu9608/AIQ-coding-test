@@ -1,20 +1,24 @@
 import React from 'react'
 
-type CheckBox = {
+type CheckBoxProps = {
   id?: string
   checked?: boolean
   onChenge?: React.ChangeEventHandler<HTMLInputElement>
   value?: string
+  checkbox? :{
+    display:string 
+  }
 }
 
-const checkBox: React.FC<CheckBox> = (props) => {
-  const { id, checked, onChenge, value } = props
+const CheckBox: React.FC<CheckBoxProps> = (props) => { 
+  const { id, checked, onChenge, value ,checkbox} = props
 
   return (
     <>
       <input
         id={id}
         type="checkbox"
+        style = {checkbox}
         name="prefectureName"
         checked={checked}
         value={value}
@@ -24,4 +28,4 @@ const checkBox: React.FC<CheckBox> = (props) => {
   )
 }
 
-export default checkBox
+export default CheckBox
